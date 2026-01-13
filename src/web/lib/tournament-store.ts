@@ -28,6 +28,26 @@ export interface TournamentState {
 
 const STORAGE_KEY = 'tournament-bracket-data';
 
+// Preset teams list
+const PRESET_TEAMS: string[] = [
+  'Сомониён', 'Ифтихор', 'Қ-ҳарбӣ', 'Ҷигда-2', 'Равот', 'Косагул', 'Пунғаз',
+  'Сочи', 'Соҳибҷон', 'Гулистон', 'Турсунзода', 'Ҷигда', 'Долона', 'Ориён-2',
+  'Қалъа', '22-Солагӣ', 'Ошоба', 'Сарвак', 'Бурак', 'Қалам', 'Кули-Хоҷа',
+  'Соҳили Сир', 'Боштол', 'Ҷарбулоқ', 'Аппон', 'Пахтакор', 'Меҳробод',
+  'Шаҳринав', 'Булоқ', 'МТС', 'Шодоба', 'Дӯстӣ', 'Маҳамат', 'Саро',
+  'Лаби дарё', 'Аппон-2', 'Ашт', 'ЯнгиҚишлоқ', 'Қаҳрамон-2', 'Урмонтол',
+  'Аппони П', 'Бобохайр', 'Шайдон'
+];
+
+const createPresetTeams = (): Team[] => {
+  return PRESET_TEAMS.map((name) => ({
+    id: generateId(),
+    name,
+    logo: '',
+    selected: false,
+  }));
+};
+
 const defaultState: TournamentState = {
   teams: [],
   matches: [],
@@ -44,7 +64,11 @@ export const loadState = (): TournamentState => {
   } catch (e) {
     console.error('Failed to load state:', e);
   }
-  return defaultState;
+  // Return state with preset teams when localStorage is empty
+  return {
+    ...defaultState,
+    teams: createPresetTeams(),
+  };
 };
 
 export const saveState = (state: TournamentState): void => {
